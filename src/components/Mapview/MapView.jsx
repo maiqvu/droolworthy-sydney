@@ -72,7 +72,7 @@ export class MapView extends React.Component {
     // });
 
     return (
-      <Map google={ this.props.google } zoom={12} initialCenter={ this.sydney } style={ this.mapStyles }>
+      <Map google={ this.props.google } zoom={14} initialCenter={ this.sydney } style={ this.mapStyles }>
 
         { this.displayMarkers() }
         {/* { displayMarkers } */}

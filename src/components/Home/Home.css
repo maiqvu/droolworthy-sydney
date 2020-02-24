@@ -33,6 +33,7 @@
 	line-height: 1.3em;
   text-align: justify;
 	text-align-last: right;
+	margin-block: 30px;
 }
 
 .home-container .discover-link {

@@ -1,9 +1,30 @@
 /* @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap'); */
 
-body {
+* {
   margin: 0;
   padding: 0;
   font-family: brandon-grotesque, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+	z-index: 1;
+}
+
+.nav-bar a {
+  color: whitesmoke;
+  display: inline-block;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 15px 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.nav-bar a:hover {
+  background-color: rgb(253, 71, 35);
+  font-weight: 600;
 }
