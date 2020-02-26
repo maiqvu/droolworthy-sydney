@@ -7,7 +7,7 @@ import MapView from './components/Mapview/MapView';
 
 const Routes = () => (
   <Router>
-    <nav className="nav-bar">
+    <nav className="nav-bar">      
       <Link to="/" className="dark-link">Home</Link>
       <Link to="/explore" className="dark-link">Explore</Link>
       <Link to="/mapview" className="dark-link">Map View</Link>
