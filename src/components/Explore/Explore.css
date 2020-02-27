@@ -32,6 +32,14 @@
   overflow-y: scroll;
 }
 
+.left-nav a {
+  cursor: pointer;
+}
+.left-nav a.red {
+  color: orangered;
+  font-weight: 900;
+}
+
 .right-nav {
   position: absolute;
   z-index: 3;
@@ -59,13 +67,10 @@
 .right-nav .resto-item {
   position: relative;
 	margin-right: 35px;
-	/* width: 400px;
-	height: 450px; */
 	border-radius: 5px;
 	transition: all 0.1s ease;
 	background-size: cover;
 	background-position: center;
-	/* box-shadow: 0 0 1em #000; */
 	flex: 0 0 auto;
 }
 .right-nav .resto-item:hover {

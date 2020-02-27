@@ -1,15 +1,10 @@
 import React from 'react';
-import axios from 'axios';
-// import { FirebaseContext } from '../Firebase/index';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
-// import CurrentLocation from './MapConfig'; // TODO: recenter map to user's location
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
 
 
 export class MapView extends React.Component {
-  // TODO: refactor to use hooks
-  // const [center, setCenter] = useState( sydney );
-  // const [zoom, setZoom] = useState( 12 );
-
   state = {
     showingInfoWindow: false,
     selectedMarker: {},   // show the active marker upon click
@@ -25,31 +20,33 @@ export class MapView extends React.Component {
   };
   colorMarker = {
       url: 'https://www.hentiesbaytourism.com/wp-content/uploads/2016/06/restaurant_marker.png',
-      scaledSize: new this.props.google.maps.Size(60, 60)
+      scaledSize: new this.props.google.maps.Size(30, 30)
   };
 
-  componentDidMount() {
-    axios.get( 'https://droolworthy-sydney.firebaseio.com/restos.json?orderBy=%22$key%22&limitToFirst=2&print=pretty' )
-      .then( res => {
-        console.log(res.data[0].restaurants);
-        this.setState({ restaurants: res.data[0].restaurants });
-      })
-      .catch( err => console.warn(err) );
-  }
+  async componentDidMount() {
+    await this.props.firebase.getRestos((restos) => {
+      const response = restos[0];
+      let restosState = [];
+      for (let i = 0; i < response.length; i++) {
+        restosState.push(...response[i].restaurants);
+      }
+      this.setState({ restaurants: restosState });
+    })
+  }   // end of componentDidMount()
 
   // To initially display all markers on map
   displayMarkers = () => {
-    return this.state.restaurants.map( (resto, index) => {
-      return <Marker key={index} name={ resto.restaurant.name }
-        position={{ lat: resto.restaurant.location.latitude, lng: resto.restaurant.location.longitude }}
+    return this.state.restaurants.map( (r, index) => {
+      return <Marker key={index} name={ r.restaurant.name }
+        position={{ lat: r.restaurant.location.latitude, lng: r.restaurant.location.longitude }}
         onClick={ this.handleMarkerClick }
         icon={ this.colorMarker } />
     });
   };
 
   // To change state of the clicked marker and display the popup InfoWindow component
-  handleMarkerClick = (props, marker, e) => {
-    console.log(marker);
+  handleMarkerClick = (props, marker) => {
+    // console.log(marker);
     this.setState({
       showingInfoWindow: true,
       selectedMarker: marker,
@@ -58,7 +55,7 @@ export class MapView extends React.Component {
   };
 
   // To close the InfoWindow
-  handleClose = props => {
+  handleClose = () => {
     if ( this.state.showingInfoWindow ) {
       this.setState({
         showingInfoWindow: false,
@@ -69,7 +66,7 @@ export class MapView extends React.Component {
 
   render() {
     return (
-      <Map google={ this.props.google } zoom={12} initialCenter={ this.sydney } style={ this.mapStyles }>
+      <Map google={ this.props.google } zoom={14} initialCenter={ this.sydney } style={ this.mapStyles }>
 
         { this.displayMarkers() }
 
@@ -82,7 +79,9 @@ export class MapView extends React.Component {
       </Map>
     );
   }   // end of render()
-}
+}   // end of class MapView
 
 
-export default GoogleApiWrapper({ apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY })( MapView );
+const MapViewPage = compose(withFirebase)(MapView);
+
+export default GoogleApiWrapper({ apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY })( MapViewPage );
