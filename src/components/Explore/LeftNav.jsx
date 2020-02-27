@@ -1,26 +1,22 @@
 import React from 'react';
 import './Explore.css';
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 class LeftNav extends React.Component {
-
-  componentDidUpdate( prevProps ) {
-    if (prevProps.currentNeighborhood !== this.props.currentNeighborhood) {
-      console.log('i am here', this.props.currentNeighborhood);
-    }
-  };   // end of componentDidUpdate()
-
   render() {
     return (
     <div className="left-nav">
     {
       this.props.neighborhoodsList.map(n => 
-        (<li key={ Math.random() }>
-          <a 
-          onClick={() => this.props.handleClick(n)}
-          className={ n === this.props.currentNeighborhood ? 'red' : '' }>
-            { n }
+        (
+        <ListItem key={Math.random()}>
+          <a onClick={() => this.props.handleClick(n)} className={ n === this.props.currentNeighborhood ? 'red' : '' }>
+            <ListItemText primary={ n } disableTypography />
           </a>
-        </li>)
+        </ListItem>
+        )
       )
     }
     </div>

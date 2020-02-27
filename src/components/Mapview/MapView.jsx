@@ -20,16 +20,22 @@ export class MapView extends React.Component {
   };
   colorMarker = {
       url: 'https://www.hentiesbaytourism.com/wp-content/uploads/2016/06/restaurant_marker.png',
-      scaledSize: new this.props.google.maps.Size(30, 30)
+      scaledSize: new this.props.google.maps.Size(50, 50)
   };
 
   async componentDidMount() {
     await this.props.firebase.getRestos((restos) => {
       const response = restos[0];
       let restosState = [];
+
       for (let i = 0; i < response.length; i++) {
         restosState.push(...response[i].restaurants);
       }
+
+      restosState = restosState.filter(r => {
+        return r.restaurant.location.locality === this.props.match.params.suburb
+      });
+
       this.setState({ restaurants: restosState });
     })
   }   // end of componentDidMount()
@@ -39,6 +45,8 @@ export class MapView extends React.Component {
     return this.state.restaurants.map( (r, index) => {
       return <Marker key={index} name={ r.restaurant.name }
         position={{ lat: r.restaurant.location.latitude, lng: r.restaurant.location.longitude }}
+        address={ r.restaurant.location.address }
+        url={ r.restaurant.url }
         onClick={ this.handleMarkerClick }
         icon={ this.colorMarker } />
     });
@@ -46,7 +54,6 @@ export class MapView extends React.Component {
 
   // To change state of the clicked marker and display the popup InfoWindow component
   handleMarkerClick = (props, marker) => {
-    // console.log(marker);
     this.setState({
       showingInfoWindow: true,
       selectedMarker: marker,
@@ -64,6 +71,10 @@ export class MapView extends React.Component {
     }
   };
 
+  getCoords = () => {
+    console.log(this.props.match.params.suburb);
+  };
+
   render() {
     return (
       <Map google={ this.props.google } zoom={14} initialCenter={ this.sydney } style={ this.mapStyles }>
@@ -73,7 +84,12 @@ export class MapView extends React.Component {
         <InfoWindow visible={ this.state.showingInfoWindow }
                   onClose={ this.handleClose }
                   marker={ this.state.selectedMarker } >
-          <div><h4>{ this.state.selectedPlace.name }</h4></div>
+          <div>
+            <h3><a href={ this.state.selectedPlace.url } target="_blank" style={{ color: 'orangered' }}>
+              { this.state.selectedPlace.name }
+            </a></h3>
+            <p>{ this.state.selectedPlace.address }</p>
+          </div>
         </InfoWindow>
 
       </Map>

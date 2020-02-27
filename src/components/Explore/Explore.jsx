@@ -33,6 +33,10 @@ class Explore extends React.Component {
     });
   }   // end of componentDidMount()
 
+  // componentDidUpdate() {
+  //   console.log(this.props.match.params.suburb);
+  // }
+
   handleSuburbClick = (suburb) => {
     this.setState({ currentNeighborhood: suburb });
     this.props.handleSuburbChange('/' + suburb);
