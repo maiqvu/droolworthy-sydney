@@ -1,4 +1,7 @@
-import app from 'firebase/app';
+// import firebase from 'firebase';
+import 'firebase/database';
+
+const firebase = require('firebase/app');
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,8 +16,18 @@ const firebaseConfig = {
 
 class Firebase {
   constructor() {
-    app.initializeApp( firebaseConfig );
+    firebase.initializeApp( firebaseConfig );
+    this.db = firebase.database();
   }
+
+  getRestos = (callback) => {
+    let result = [];
+    const restos = this.db.ref('/restos');
+    restos.on('value', function(snapshot) {
+      result.push( snapshot.val() );
+      callback( result );
+    });
+  };
 }
 
 export default Firebase;
